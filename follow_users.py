@@ -119,8 +119,10 @@ def run_bot(user, password, profiles):
             did_connect = click_connect_button(driver, connect_button)
         if did_connect:
             connected_profiles.append(profile)
+            print(f"Connected to {profile}")
         else:
             failed_connections.append(profile)
+            print(f"Failed to connect to {profile}")
         if index % 20 == 0 and index != 0:
             print("Sleeping for 1 hour...")
             time.sleep(3600)
