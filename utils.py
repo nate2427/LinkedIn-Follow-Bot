@@ -31,5 +31,5 @@ def send_email(email_address, subject, body):
     # close the server
     server.quit()
 
-send_email('natebaker2427@gmail.com', 'Test', 'This is a test')
+# send_email('natebaker2427@gmail.com', 'Test', 'This is a test')
 
