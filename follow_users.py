@@ -32,7 +32,7 @@ def navigate_to_linkedin(driver):
     # navigate to LinkedIn
     driver.get("https://www.linkedin.com/")
 
-def login(driver, user, password):
+def login(driver, user, pwd):
     # wait for page to load
     wait = WebDriverWait(driver, 10)
     element = wait.until(EC.element_to_be_clickable((By.NAME, "session_key")))
@@ -41,7 +41,7 @@ def login(driver, user, password):
     username = driver.find_element(By.NAME, "session_key")
     username.send_keys(user)
     password = driver.find_element(By.NAME,"session_password")
-    password.send_keys(password)
+    password.send_keys(pwd)
     password.send_keys(Keys.RETURN)
 
 def wait_for_page_load(driver):
