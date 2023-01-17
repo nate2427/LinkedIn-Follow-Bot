@@ -107,10 +107,17 @@ def run_bot(user, password, profiles):
     connected_profiles = []
     failed_connections = []
     for index, profile in enumerate(profiles):
+        print(f"Searching for {profile}")
         did_connect = False
         go_to_profile(driver, profile)
         wait_for_page_load(driver)
         connect_button, more_button = find_buttons(driver)
+        if connect_button and more_button:
+            print("Found both buttons")
+        elif connect_button:
+            print("Found connect button")
+        elif more_button:
+            print("Found more button")
         if connect_button:
             did_connect = click_connect_button(driver, connect_button)
             if not did_connect:
@@ -131,6 +138,7 @@ def run_bot(user, password, profiles):
         else:
             time.sleep(5)
     driver.quit()
+    print("Bot finished connecting to profiles")
     follow_bot_collecyion = get_follow_bot_collection()
     follow_bot_collecyion.insert_one({'email': user, 'connected_profiles': connected_profiles, 'failed_connections': failed_connections, 'time': time.time()})
     # send email to user
@@ -139,6 +147,7 @@ def run_bot(user, password, profiles):
     # in the body of the email, include the number of profiles connected to and the number of failed connections and the profiles that failed
     body = f"Number of profiles connected to: {len(connected_profiles)}\nNumber of failed connections: {len(failed_connections)}\nProfiles that failed: {failed_connections}"
     send_email(email_address, subject, body)
+    print(f"Email sent to {user}")
     return connected_profiles, failed_connections
 
 # if __name__ == "__main__":
