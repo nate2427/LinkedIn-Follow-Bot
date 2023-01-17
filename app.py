@@ -11,19 +11,19 @@ st.markdown("1. Enter your LinkedIn profile credentials.\n")
 st.markdown("2. Upload a CSV of direct LinkedIn Profile URLS\n")
 st.markdown("3. Click the Start Bot button.\n")
 
-# create a text input for the username
-username = st.text_input("Enter your LinkedIn username")
-# create a text input for the password
-password = st.text_input("Enter your LinkedIn password", type="password")
-# create a file uploader for the CSV
-csv_file = st.file_uploader("Upload a CSV of LinkedIn Profile URLs", type="csv" )
-col1, col2 = st.columns(2)
-# create a button to start the bot
-start_bot = col1.button("Start Bot")
+with st.form("my_form"):
+   # create a text input for the username
+   username = st.text_input("Enter your LinkedIn username")
+   # create a text input for the password
+   password = st.text_input("Enter your LinkedIn password", type="password")
+    # create a file uploader for the CSV
+   csv_file = st.file_uploader("Upload a CSV of LinkedIn Profile URLs", type="csv" )
+   col1, col2 = st.columns(2)
 
-# if the start bot button is clicked
-if start_bot and csv_file and username and password:
-    # open the csv file and get all of the profile urls
+   # Every form must have a submit button.
+   submitted = st.form_submit_button("Submit")
+   if submitted and csv_file and username and password:
+    # get the profile urls from the csv file
     profile_urls = open_csv_file(csv_file)
 
     # start a new thread to run the bot

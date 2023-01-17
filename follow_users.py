@@ -22,7 +22,9 @@ def set_up_web_driver():
         driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
         print("Headless Chrome Initialized")
     else:
-        driver = webdriver.Chrome()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--headless")
+        driver = webdriver.Chrome(chrome_options=chrome_options)
         print("Chrome Initialized")
     return driver
 
@@ -30,14 +32,14 @@ def navigate_to_linkedin(driver):
     # navigate to LinkedIn
     driver.get("https://www.linkedin.com/")
 
-def login(driver, username, password):
+def login(driver, user, password):
     # wait for page to load
     wait = WebDriverWait(driver, 10)
     element = wait.until(EC.element_to_be_clickable((By.NAME, "session_key")))
 
     # log in to LinkedIn
     username = driver.find_element(By.NAME, "session_key")
-    username.send_keys(username)
+    username.send_keys(user)
     password = driver.find_element(By.NAME,"session_password")
     password.send_keys(password)
     password.send_keys(Keys.RETURN)
@@ -103,7 +105,7 @@ def click_more_button(driver, more_button):
 def run_bot(user, password, profiles):
     driver = set_up_web_driver()
     navigate_to_linkedin(driver)
-    print(f'Username is {user}')
+    print(f'Logging in as {user}')
     login(driver, user, password)
     connected_profiles = []
     failed_connections = []
