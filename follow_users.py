@@ -20,8 +20,10 @@ def set_up_web_driver():
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+        print("Headless Chrome Initialized")
     else:
         driver = webdriver.Chrome()
+        print("Chrome Initialized")
     return driver
 
 def navigate_to_linkedin(driver):
