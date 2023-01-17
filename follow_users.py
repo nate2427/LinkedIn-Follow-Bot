@@ -103,6 +103,7 @@ def click_more_button(driver, more_button):
 def run_bot(user, password, profiles):
     driver = set_up_web_driver()
     navigate_to_linkedin(driver)
+    print(f'Username is {user}')
     login(driver, user, password)
     connected_profiles = []
     failed_connections = []
