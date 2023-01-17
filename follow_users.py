@@ -10,7 +10,10 @@ from utils import send_email
 
 def set_up_web_driver():
     # set up web driver
-    driver = webdriver.Chrome()
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    driver = webdriver.Chrome(chrome_options=chrome_options)
     return driver
 
 def navigate_to_linkedin(driver):
