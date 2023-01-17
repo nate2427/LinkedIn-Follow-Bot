@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from db import get_follow_bot_collection
+from utils import send_email
 
 
 def set_up_web_driver():
