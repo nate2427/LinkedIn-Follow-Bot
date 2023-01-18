@@ -23,7 +23,7 @@ def set_up_web_driver():
         print("Headless Chrome Initialized")
     else:
         chrome_options = webdriver.ChromeOptions()
-        # chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         driver = webdriver.Chrome(chrome_options=chrome_options)
         print("Chrome Initialized")
     return driver
@@ -47,7 +47,11 @@ def login(driver, user, pwd):
 def wait_for_page_load(driver):
     # wait for page to load without using time.sleep()
     wait = WebDriverWait(driver, 20)
-    element =  wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@aria-label='Search']")))
+    try:
+        element =  wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@aria-label='Search']")))
+    except:
+        return False
+    return True
 
 def go_to_profile(driver, profile_url):
     driver.get(profile_url)
@@ -112,7 +116,12 @@ def run_bot(user, password, profiles):
     navigate_to_linkedin(driver)
     print(f'Logging in as {user}')
     login(driver, user, password)
-    wait_for_page_load(driver)
+    if wait_for_page_load(driver):
+        print("User logged in")
+    else:
+        print("User failed to log in")
+        send_email(user, "LinkedIn Bot Error", f"LinkedIn bot was unable to log in as {user}")
+        return None
     connected_profiles = []
     failed_connections = []
     for index, profile in enumerate(profiles):
