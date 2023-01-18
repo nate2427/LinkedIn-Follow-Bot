@@ -19,11 +19,13 @@ def set_up_web_driver():
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--window-size=1920,1080")
         driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
         print("Headless Chrome Initialized")
     else:
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--window-size=1920,1080")
         driver = webdriver.Chrome(chrome_options=chrome_options)
         print("Chrome Initialized")
     return driver
@@ -50,6 +52,7 @@ def wait_for_page_load(driver):
     try:
         element =  wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@aria-label='Search']")))
     except:
+        driver.get_screenshot_as_file("screenshot.png")
         return False
     return True
 
@@ -154,7 +157,7 @@ def run_bot(user, password, profiles):
             print(f"Failed to connect to {profile}")
         if index % 20 == 0 and index != 0:
             print("Sleeping for 1 hour...")
-            time.sleep(3600)
+            time.sleep(600)
         else:
             time.sleep(5)
     driver.quit()
