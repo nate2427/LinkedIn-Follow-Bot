@@ -53,6 +53,7 @@ def wait_for_page_load(driver):
         element =  wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@aria-label='Search']")))
     except:
         driver.get_screenshot_as_file("screenshot.png")
+        # send email to notify that the bot has crashed
         return False
     return True
 
@@ -123,7 +124,7 @@ def run_bot(user, password, profiles):
         print("User logged in")
     else:
         print("User failed to log in")
-        send_email(user, "LinkedIn Bot Error", f"LinkedIn bot was unable to log in as {user}")
+        send_email(user, "LinkedIn Bot Error", f"LinkedIn bot was unable to log in as {user}", "screenshot.png")
         return None
     connected_profiles = []
     failed_connections = []
