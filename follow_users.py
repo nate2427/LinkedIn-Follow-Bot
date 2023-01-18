@@ -23,7 +23,7 @@ def set_up_web_driver():
         print("Headless Chrome Initialized")
     else:
         chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument("--headless")
+        # chrome_options.add_argument("--headless")
         driver = webdriver.Chrome(chrome_options=chrome_options)
         print("Chrome Initialized")
     return driver
@@ -88,32 +88,37 @@ def click_connect_button(driver, connect_button):
     return True
 
 def click_more_button(driver, more_button):
-    more_button.click()
-    time.sleep(2)
+    try:
+        more_button.click()
+        time.sleep(5)
 
-    button_container = driver.find_elements(By.CLASS_NAME, 'artdeco-dropdown__content-inner')
-    # get the children of the button container
-    for container in button_container:
-        container = container.find_elements(By.TAG_NAME, 'span')
-        # loop through the elements and find the one with the text connect
-        for element in container:
-            if element.text == "Connect":
-                connect_button = element
-                break
+        button_container = driver.find_elements(By.CLASS_NAME, 'artdeco-dropdown__content-inner')
+        connect_button = None
+        # get the children of the button container
+        for container in button_container:
+            container = container.find_elements(By.TAG_NAME, 'span')
+            # loop through the elements and find the one with the text connect
+            for element in container:
+                if element.text == "Connect":
+                    connect_button = element
+                    break
+    except:
+        return None
     return connect_button
+    
 
 def run_bot(user, password, profiles):
     driver = set_up_web_driver()
     navigate_to_linkedin(driver)
     print(f'Logging in as {user}')
     login(driver, user, password)
+    wait_for_page_load(driver)
     connected_profiles = []
     failed_connections = []
     for index, profile in enumerate(profiles):
         print(f"Searching for {profile}")
         did_connect = False
         go_to_profile(driver, profile)
-        wait_for_page_load(driver)
         connect_button, more_button = find_buttons(driver)
         if connect_button and more_button:
             print("Found both buttons")
@@ -121,6 +126,9 @@ def run_bot(user, password, profiles):
             print("Found connect button")
         elif more_button:
             print("Found more button")
+        else:
+            print("Found no buttons")
+
         if connect_button:
             did_connect = click_connect_button(driver, connect_button)
             if not did_connect:
@@ -144,11 +152,15 @@ def run_bot(user, password, profiles):
     print("Bot finished connecting to profiles")
     follow_bot_collecyion = get_follow_bot_collection()
     follow_bot_collecyion.insert_one({'email': user, 'connected_profiles': connected_profiles, 'failed_connections': failed_connections, 'time': time.time()})
+    print("Results saved to database")
     # send email to user
     email_address = user
     subject = "LinkedIn Following Bot Results"
+    failed_connections_str = ""
+    for profile in failed_connections:
+        failed_connections_str += profile + "\n"
     # in the body of the email, include the number of profiles connected to and the number of failed connections and the profiles that failed
-    body = f"Number of profiles connected to: {len(connected_profiles)}\nNumber of failed connections: {len(failed_connections)}\nProfiles that failed: {failed_connections}"
+    body = f"Number of profiles connected to: {len(connected_profiles)}\nNumber of failed connections: {len(failed_connections)}\nProfiles that failed: {failed_connections_str}"
     send_email(email_address, subject, body)
     print(f"Email sent to {user}")
     return connected_profiles, failed_connections

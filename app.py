@@ -21,7 +21,7 @@ with st.form("my_form"):
    col1, col2 = st.columns(2)
 
    # Every form must have a submit button.
-   submitted = st.form_submit_button("Submit")
+   submitted = st.form_submit_button("Start Bot")
    if submitted and csv_file and username and password:
     # get the profile urls from the csv file
     profile_urls = open_csv_file(csv_file)
@@ -33,7 +33,7 @@ with st.form("my_form"):
     # create a label for the number of profiles
     col2.markdown(f"#### Number of Profiles: {len(profile_urls)}")
     st.markdown("##### Bot is running...")
-    st.markdown("##### The bot will follow 20 profiles per hour.")
+    st.markdown(f"##### The bot will follow 20 profiles per hour, so should take about {len(profile_urls) / 20} hours to complete.")
     st.markdown("##### We will email you when the bot is finished.")
     
 
